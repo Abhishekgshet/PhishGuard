@@ -1,11 +1,26 @@
 // ===============================
+// BACKEND URL
+// ===============================
+
+const API_URL =
+    "https://phishguard-api-ebt8.onrender.com";
+
+
+// ===============================
 // DASHBOARD ELEMENTS
 // ===============================
 
-const totalScans = document.getElementById("totalScans");
-const lowRisk = document.getElementById("lowRisk");
-const suspicious = document.getElementById("suspicious");
-const highRisk = document.getElementById("highRisk");
+const totalScans =
+    document.getElementById("totalScans");
+
+const lowRisk =
+    document.getElementById("lowRisk");
+
+const suspicious =
+    document.getElementById("suspicious");
+
+const highRisk =
+    document.getElementById("highRisk");
 
 const refreshDashboardBtn =
     document.getElementById("refreshDashboardBtn");
@@ -72,11 +87,20 @@ const refreshBtn =
 // BUTTON EVENTS
 // ===============================
 
-analyzeBtn.addEventListener("click", analyzeUrl);
+analyzeBtn.addEventListener(
+    "click",
+    analyzeUrl
+);
 
-refreshBtn.addEventListener("click", loadHistory);
+refreshBtn.addEventListener(
+    "click",
+    loadHistory
+);
 
-searchBtn.addEventListener("click", searchHistory);
+searchBtn.addEventListener(
+    "click",
+    searchHistory
+);
 
 refreshDashboardBtn.addEventListener(
     "click",
@@ -105,10 +129,12 @@ async function analyzeUrl() {
     analyzeBtn.textContent =
         "Analyzing...";
 
+    analyzeBtn.disabled = true;
+
     try {
 
         const response = await fetch(
-            "http://127.0.0.1:8000/analyze",
+            `${API_URL}/analyze`,
             {
                 method: "POST",
 
@@ -121,6 +147,14 @@ async function analyzeUrl() {
                 })
             }
         );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Server error: ${response.status}`
+            );
+        }
 
 
         const data =
@@ -140,13 +174,17 @@ async function analyzeUrl() {
         result.classList.remove("hidden");
 
 
+        // ===============================
         // URL
+        // ===============================
 
         analyzedUrl.textContent =
             data.url;
 
 
+        // ===============================
         // SCORE
+        // ===============================
 
         const riskScore =
             data.analysis.risk_score;
@@ -155,19 +193,21 @@ async function analyzeUrl() {
             riskScore;
 
 
+        // ===============================
         // RISK BAR
+        // ===============================
 
         riskBar.style.width =
             riskScore + "%";
 
 
+        // ===============================
         // STATUS
+        // ===============================
 
         status.textContent =
             data.analysis.status;
 
-
-        // STATUS COLOR
 
         status.className = "";
 
@@ -245,14 +285,26 @@ async function analyzeUrl() {
 
 
         // ===============================
-        // UPDATE HISTORY + DASHBOARD
+        // UPDATE HISTORY
         // ===============================
 
         await loadHistory();
 
+
+        // ===============================
+        // UPDATE DASHBOARD
+        // ===============================
+
         await loadStats();
 
+
+        console.log(
+            "RESULT CLASS:",
+            result.className
+        );
+
     }
+
 
     catch (err) {
 
@@ -261,15 +313,19 @@ async function analyzeUrl() {
             err
         );
 
+
         error.textContent =
             "Unable to connect to the server.";
 
     }
 
+
     finally {
 
         analyzeBtn.textContent =
             "Analyze URL";
+
+        analyzeBtn.disabled = false;
     }
 }
 
@@ -284,8 +340,16 @@ async function loadHistory() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/history"
+                `${API_URL}/history`
             );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Server error: ${response.status}`
+            );
+        }
 
 
         const data =
@@ -375,8 +439,16 @@ async function loadStats() {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/stats"
+                `${API_URL}/stats`
             );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Server error: ${response.status}`
+            );
+        }
 
 
         const data =
@@ -434,8 +506,16 @@ async function searchHistory() {
 
         const response =
             await fetch(
-                `http://127.0.0.1:8000/search?search=${encodeURIComponent(search)}&status=${encodeURIComponent(selectedStatus)}`
+                `${API_URL}/search?search=${encodeURIComponent(search)}&status=${encodeURIComponent(selectedStatus)}`
             );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Server error: ${response.status}`
+            );
+        }
 
 
         const data =
@@ -525,11 +605,19 @@ async function deleteScan(id) {
 
         const response =
             await fetch(
-                `http://127.0.0.1:8000/scans/${id}`,
+                `${API_URL}/scans/${id}`,
                 {
                     method: "DELETE"
                 }
             );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Server error: ${response.status}`
+            );
+        }
 
 
         const data =
@@ -566,8 +654,8 @@ async function refreshDashboard() {
     );
 
 
-    // IMPORTANT:
-    // This does NOT touch the result box.
+    // This only refreshes data.
+    // It does NOT hide the analysis result.
 
     await loadHistory();
 
@@ -582,4 +670,3 @@ async function refreshDashboard() {
 loadHistory();
 
 loadStats();
-  1
