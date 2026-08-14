@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PhishGuard</title>
+
+    <link rel="stylesheet"
+          href="style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
+
+    <nav>
+
+        <div class="logo">
+            🛡 PhishGuard
+        </div>
+
+        <div class="nav-text">
+            URL Security Analyzer
+        </div>
+
+    </nav>
+
+
+
+    <main>
+
+
+        <!-- =========================
+             URL ANALYZER
+        ========================== -->
+
+        <section class="hero">
+
+            <p class="tag">
+                CYBERSECURITY • URL ANALYSIS
+            </p>
+
+
+            <h1>
+                Is this URL <span>safe?</span>
+            </h1>
+
+
+            <p class="description">
+                Analyze suspicious URLs and identify
+                potential phishing indicators.
+            </p>
+
+
+            <div class="scanner">
+
+                <input
+                    type="text"
+                    id="urlInput"
+                    placeholder="Enter a URL, e.g. https://example.com"
+                >
+
+
+                <button
+                    type="button"
+                    id="analyzeBtn"
+                >
+                    Analyze URL
+                </button>
+
+
+                <button
+                    type="button"
+                    id="refreshDashboardBtn"
+                >
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+
+            <p id="error"></p>
+
+        </section>
+
+
+
+        <!-- =========================
+             ANALYSIS RESULT
+        ========================== -->
+
+        <section
+            id="result"
+            class="result hidden"
+        >
+
+            <div class="result-header">
+
+
+                <div>
+
+                    <p class="small-title">
+                        ANALYSIS RESULT
+                    </p>
+
+
+                    <h2 id="status">
+                        Low Risk
+                    </h2>
+
+                </div>
+
+
+
+                <div class="score">
+
+                    <span id="score">
+                        0
+                    </span>
+
+                    <small>
+                        /100
+                    </small>
+
+
+                    <div class="risk-bar">
+
+                        <div id="riskBar"></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="url-box">
+
+                <span>
+                    Analyzed URL
+                </span>
+
+
+                <p id="analyzedUrl"></p>
+
+            </div>
+
+
+
+            <div class="warnings">
+
+                <h3>
+                    Detection Details
+                </h3>
+
+
+                <ul id="warningList"></ul>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+
+        <section class="dashboard">
+
+
+            <div class="dashboard-title">
+
+                <p class="small-title">
+                    SECURITY OVERVIEW
+                </p>
+
+
+                <h2>
+                    Dashboard
+                </h2>
+
+            </div>
+
+
+
+            <div class="stats">
+
+
+                <div class="stat-card">
+
+                    <p>
+                        Total Scans
+                    </p>
+
+
+                    <h3 id="totalScans">
+                        0
+                    </h3>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <p>
+                        Low Risk
+                    </p>
+
+
+                    <h3 id="lowRisk">
+                        0
+                    </h3>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <p>
+                        Suspicious
+                    </p>
+
+
+                    <h3 id="suspicious">
+                        0
+                    </h3>
+
+                </div>
+
+
+
+                <div class="stat-card">
+
+                    <p>
+                        High Risk
+                    </p>
+
+
+                    <h3 id="highRisk">
+                        0
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =========================
+             SCAN HISTORY
+        ========================== -->
+
+        <section class="history">
+
+
+            <div class="history-header">
+
+
+                <div>
+
+                    <p class="small-title">
+                        DATABASE
+                    </p>
+
+
+                    <h2>
+                        Scan History
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="refreshBtn"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+
+            <!-- SEARCH AND FILTER -->
+
+            <div class="history-controls">
+
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search URL..."
+                >
+
+
+                <select id="statusFilter">
+
+                    <option value="">
+                        All Status
+                    </option>
+
+
+                    <option value="Low Risk">
+                        Low Risk
+                    </option>
+
+
+                    <option value="Suspicious">
+                        Suspicious
+                    </option>
+
+
+                    <option value="High Risk">
+                        High Risk
+                    </option>
+
+                </select>
+
+
+                <button
+                    type="button"
+                    id="searchBtn"
+                >
+                    Search
+                </button>
+
+            </div>
+
+
+
+            <!-- HISTORY TABLE -->
+
+            <div class="history-table">
+
+
+                <div class="table-header">
+
+                    <span>
+                        URL
+                    </span>
+
+
+                    <span>
+                        Risk
+                    </span>
+
+
+                    <span>
+                        Status
+                    </span>
+
+
+                    <span>
+                        Warnings
+                    </span>
+
+
+                    <span>
+                        Action
+                    </span>
+
+                </div>
+
+
+
+                <div id="historyList">
+
+                    <div class="history-empty">
+                        No scans yet.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <p>
+            PhishGuard • Phishing URL Detection System
+        </p>
+
+    </footer>
+
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
