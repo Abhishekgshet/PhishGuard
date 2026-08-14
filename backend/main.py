@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from backend.database import create_table, save_scan, get_scans
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from backend.detector import analyze_url
+
 from backend.database import (
     create_table,
     save_scan,
@@ -16,9 +16,11 @@ from backend.database import (
 
 
 app = FastAPI()
+
 create_table()
 
 
+# Allow frontend to communicate with backend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -39,20 +41,6 @@ def home():
     }
 
 
-@app.delete("/scans/{scan_id}")
-def delete(scan_id: int):
-
-    deleted = delete_scan(scan_id)
-
-    if deleted == 0:
-        return {
-            "message": "Scan not found"
-        }
-
-    return {
-        "message": "Scan deleted successfully"
-    }
-
 @app.post("/analyze")
 def analyze(request: URLRequest):
 
@@ -70,6 +58,7 @@ def analyze(request: URLRequest):
         "analysis": result
     }
 
+
 @app.get("/history")
 def history():
 
@@ -78,6 +67,7 @@ def history():
     return {
         "scans": scans
     }
+
 
 @app.get("/stats")
 def stats():
@@ -94,12 +84,30 @@ def search(search: str = "", status: str = ""):
         "scans": scans
     }
 
+
+@app.delete("/scans/{scan_id}")
+def delete(scan_id: int):
+
+    deleted = delete_scan(scan_id)
+
+    if deleted == 0:
+
+        return {
+            "message": "Scan not found"
+        }
+
+    return {
+        "message": "Scan deleted successfully"
+    }
+
+
 @app.put("/scans/{scan_id}")
 def update(scan_id: int, status: str):
 
     updated = update_scan(scan_id, status)
 
     if updated == 0:
+
         return {
             "message": "Scan not found"
         }
